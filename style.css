@@ -51,8 +51,8 @@ canvas {
 /* Responsividad */
 @media (max-width: 768px) {
   #center-photo img {
-    width: 100px; /* Tamaño reducido para móviles */
-    height: 100px;
+    width: 120px; /* Tamaño reducido para móviles */
+    height: 120px;
   }
 
   #message h1 {
