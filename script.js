@@ -26,8 +26,7 @@ var init = function () {
     var canvas = document.getElementById('heart');
     var ctx = canvas.getContext('2d');
 
-    var scaleFactor = 1; // Controla el tamaño general del corazón
-    var particleScaleFactor = window.innerWidth <= 768 ? 0.3 : 1; // Controla el tamaño de las partículas en móviles
+    var particleScaleFactor = window.innerWidth <= 768 ? 0.3 : 1; // Escala para partículas en móviles
 
     var width = canvas.width = window.innerWidth;
     var height = canvas.height = window.innerHeight;
@@ -36,21 +35,26 @@ var init = function () {
     ctx.fillStyle = "rgba(0,0,0,1)";
     ctx.fillRect(0, 0, width, height);
 
+    // Genera posiciones del corazón con escala dinámica para partículas
     var heartPosition = function (rad) {
         return [
-            Math.pow(Math.sin(rad), 3) * scaleFactor,
-            -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad)) * scaleFactor
+            Math.pow(Math.sin(rad), 3),
+            -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))
         ];
     };
 
+    // Escala y traslada partículas sin afectar el fondo
     var scaleAndTranslate = function (pos, sx, sy, dx, dy) {
-        return [dx + pos[0] * sx, dy + pos[1] * sy];
+        return [
+            dx + pos[0] * sx * particleScaleFactor, // Escala las partículas
+            dy + pos[1] * sy * particleScaleFactor
+        ];
     };
 
     window.addEventListener('resize', function () {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-        particleScaleFactor = window.innerWidth <= 768 ? 0.3 : 1; // Recalcula el tamaño de las partículas en móviles
+        particleScaleFactor = window.innerWidth <= 768 ? 0.3 : 1; // Recalcula el tamaño de las partículas
         ctx.fillStyle = "rgba(0,0,0,1)";
         ctx.fillRect(0, 0, width, height);
     });
@@ -62,13 +66,13 @@ var init = function () {
 
     // Genera los puntos del corazón
     for (i = 0; i < Math.PI * 2; i += dr) {
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 210 * particleScaleFactor, 13 * particleScaleFactor, 0, 0));
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 210, 13, 0, 0));
     }
     for (i = 0; i < Math.PI * 2; i += dr) {
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 150 * particleScaleFactor, 9 * particleScaleFactor, 0, 0));
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 150, 9, 0, 0));
     }
     for (i = 0; i < Math.PI * 2; i += dr) {
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90 * particleScaleFactor, 5 * particleScaleFactor, 0, 0));
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90, 5, 0, 0));
     }
 
     var heartPointsCount = pointsOrigin.length;
@@ -89,7 +93,7 @@ var init = function () {
         e[i] = {
             vx: 0,
             vy: 0,
-            R: 2 * particleScaleFactor, // Tamaño reducido de las partículas
+            R: 2 * particleScaleFactor, // Escala el radio de las partículas
             speed: rand() + 5,
             q: ~~(rand() * heartPointsCount),
             D: 2 * (i % 2) - 1,
