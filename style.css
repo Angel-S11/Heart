@@ -22,7 +22,7 @@ canvas {
 }
 
 #message h1 {
-  font-size: 2rem;
+  font-size: 1rem;
   margin: 0;
 }
 
@@ -63,4 +63,39 @@ canvas {
 #right-photo img:hover {
     transform: scale(1.2); /* Agranda la foto al pasar el mouse */
     box-shadow: 0 0 20px rgba(255, 255, 255, 1); /* Más brillo */
+}
+
+/* Media query para pantallas pequeñas (móviles) */
+@media (max-width: 768px) {
+  /* Fotos en la parte inferior */
+  #left-photo,
+  #right-photo {
+      position: static; /* Cambia a flujo normal */
+      display: inline-block; /* Muestra las fotos en línea */
+      margin: 10px; /* Espaciado entre fotos */
+  }
+
+  #left-photo img,
+  #right-photo img {
+      width: 100px; /* Tamaño reducido para móviles */
+      height: 100px;
+      border-radius: 10%; /* Forma circular */
+  }
+
+  /* Contenedor de fotos */
+  body {
+      text-align: center; /* Centra las fotos horizontalmente */
+  }
+
+  /* Corazón más pequeño */
+  canvas {
+      width: 80%; /* Ajusta el tamaño del canvas */
+      height: auto; /* Mantén proporciones */
+      margin: 0 auto; /* Centra el canvas horizontalmente */
+  }
+
+  /* Mensaje */
+  #message h1 {
+      font-size: 1.5rem; /* Ajusta el tamaño del texto */
+  }
 }
