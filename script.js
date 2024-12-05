@@ -26,8 +26,8 @@ var init = function () {
     var canvas = document.getElementById('heart');
     var ctx = canvas.getContext('2d');
 
-    // Ajusta la escala en función del tamaño de la pantalla
-    var scaleFactor = window.innerWidth <= 768 ? 0.6 : 1; // Reducir tamaño en móviles
+    var scaleFactor = 1; // Controla el tamaño general del corazón
+    var particleScaleFactor = window.innerWidth <= 768 ? 0.3 : 1; // Controla el tamaño de las partículas en móviles
 
     var width = canvas.width = window.innerWidth;
     var height = canvas.height = window.innerHeight;
@@ -50,7 +50,7 @@ var init = function () {
     window.addEventListener('resize', function () {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-        scaleFactor = window.innerWidth <= 768 ? 0.6 : 1; // Recalcula la escala al cambiar el tamaño
+        particleScaleFactor = window.innerWidth <= 768 ? 0.3 : 1; // Recalcula el tamaño de las partículas en móviles
         ctx.fillStyle = "rgba(0,0,0,1)";
         ctx.fillRect(0, 0, width, height);
     });
@@ -60,14 +60,15 @@ var init = function () {
     var i;
     var dr = window.isDevice ? 0.3 : 0.1;
 
+    // Genera los puntos del corazón
     for (i = 0; i < Math.PI * 2; i += dr) {
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 210, 13, 0, 0));
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 210 * particleScaleFactor, 13 * particleScaleFactor, 0, 0));
     }
     for (i = 0; i < Math.PI * 2; i += dr) {
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 150, 9, 0, 0));
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 150 * particleScaleFactor, 9 * particleScaleFactor, 0, 0));
     }
     for (i = 0; i < Math.PI * 2; i += dr) {
-        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90, 5, 0, 0));
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90 * particleScaleFactor, 5 * particleScaleFactor, 0, 0));
     }
 
     var heartPointsCount = pointsOrigin.length;
@@ -88,7 +89,7 @@ var init = function () {
         e[i] = {
             vx: 0,
             vy: 0,
-            R: 2,
+            R: 2 * particleScaleFactor, // Tamaño reducido de las partículas
             speed: rand() + 5,
             q: ~~(rand() * heartPointsCount),
             D: 2 * (i % 2) - 1,
