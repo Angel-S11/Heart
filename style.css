@@ -9,11 +9,10 @@ canvas {
   z-index: 0; /* Coloca el canvas en el fondo */
 }
 
+/* Mensaje */
 #message {
-  position: absolute;
+  position: relative; /* Cambia a relative para alinear los elementos dentro */
   top: 20px; /* Espaciado desde el borde superior */
-  left: 50%;
-  transform: translateX(-50%); /* Centrar horizontalmente */
   text-align: center;
   color: white;
   font-family: 'Arial', sans-serif;
@@ -22,80 +21,33 @@ canvas {
 }
 
 #message h1 {
-  font-size: 1rem;
-  margin: 0;
+  font-size: 2rem; /* Ajusta el tamaño del texto */
+  margin: 0 0 10px; /* Espacio inferior para separar el texto de la foto */
 }
 
-#message p {
-  font-size: 1.5rem;
-  margin: 10px 0 0;
+/* Foto centrada */
+#center-photo img {
+  width: 150px; /* Tamaño inicial de la foto */
+  height: 150px;
+  border-radius: 10%; /* Forma circular */
+  border: 3px solid white;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); 
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* Fotos en los lados */
-#left-photo,
-#right-photo {
-    position: absolute;
-    top: 50%; /* Centra verticalmente las fotos */
-    transform: translateY(-50%);
-    z-index: 1; /* Asegura que estén encima del canvas */
+#center-photo img:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 0 20px rgba(255, 255, 255, 1); 
 }
 
-#left-photo {
-    left: 80px; /* Espacio desde el borde izquierdo */
-}
-
-#right-photo {
-    right: 80px; /* Espacio desde el borde derecho */
-}
-
-#left-photo img,
-#right-photo img {
-    width: 150px; /* Tamaño de las fotos */
-    height: 150px;
-    border-radius: 5%; /* Forma circular */
-    border: 3px solid white; /* Borde blanco */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); /* Efecto de brillo */
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-}
-
-#left-photo img:hover,
-#right-photo img:hover {
-    transform: scale(1.2); /* Agranda la foto al pasar el mouse */
-    box-shadow: 0 0 20px rgba(255, 255, 255, 1); /* Más brillo */
-}
-
-/* Media query para pantallas pequeñas (móviles) */
+/* Responsividad */
 @media (max-width: 768px) {
-  /* Fotos en la parte inferior */
-  #left-photo,
-  #right-photo {
-      position: static; /* Cambia a flujo normal */
-      display: inline-block; /* Muestra las fotos en línea */
-      margin: 10px; /* Espaciado entre fotos */
+  #center-photo img {
+    width: 100px; /* Tamaño reducido para móviles */
+    height: 100px;
   }
 
-  #left-photo img,
-  #right-photo img {
-      width: 100px; /* Tamaño reducido para móviles */
-      height: 100px;
-      border-radius: 10%; /* Forma circular */
-  }
-
-  /* Contenedor de fotos */
-  body {
-      text-align: center; /* Centra las fotos horizontalmente */
-  }
-
-  /* Corazón más pequeño */
-  canvas {
-      width: 80%; /* Ajusta el tamaño del canvas */
-      height: auto; /* Mantén proporciones */
-      margin: 0 auto; /* Centra el canvas horizontalmente */
-  }
-
-  /* Mensaje */
   #message h1 {
-      font-size: 1.5rem; /* Ajusta el tamaño del texto */
+    font-size: 1rem; /* Texto más pequeño en móviles */
   }
 }
