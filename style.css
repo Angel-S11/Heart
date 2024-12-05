@@ -50,4 +50,10 @@ canvas {
   #message h1 {
     font-size: 1rem; /* Texto más pequeño en móviles */
   }
+
+  canvas {
+    width: 80%; /* Reducir el ancho del canvas en móviles */
+    height: auto; /* Mantener proporciones */
+    margin: 0 auto; /* Centrar el canvas horizontalmente */
+  }
 }

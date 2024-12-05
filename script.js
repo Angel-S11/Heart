@@ -22,38 +22,54 @@ var loaded = false;
 var init = function () {
     if (loaded) return;
     loaded = true;
-    var mobile = window.isDevice;
-    var koef = mobile ? 0.5 : 1;
+
     var canvas = document.getElementById('heart');
     var ctx = canvas.getContext('2d');
-    var width = canvas.width = koef * innerWidth;
-    var height = canvas.height = koef * innerHeight;
+
+    // Ajusta la escala en función del tamaño de la pantalla
+    var scaleFactor = window.innerWidth <= 768 ? 0.6 : 1; // Reducir tamaño en móviles
+
+    var width = canvas.width = window.innerWidth;
+    var height = canvas.height = window.innerHeight;
     var rand = Math.random;
+
     ctx.fillStyle = "rgba(0,0,0,1)";
     ctx.fillRect(0, 0, width, height);
 
     var heartPosition = function (rad) {
-        //return [Math.sin(rad), Math.cos(rad)];
-        return [Math.pow(Math.sin(rad), 3), -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))];
+        return [
+            Math.pow(Math.sin(rad), 3) * scaleFactor,
+            -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad)) * scaleFactor
+        ];
     };
+
     var scaleAndTranslate = function (pos, sx, sy, dx, dy) {
         return [dx + pos[0] * sx, dy + pos[1] * sy];
     };
 
     window.addEventListener('resize', function () {
-        width = canvas.width = koef * innerWidth;
-        height = canvas.height = koef * innerHeight;
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        scaleFactor = window.innerWidth <= 768 ? 0.6 : 1; // Recalcula la escala al cambiar el tamaño
         ctx.fillStyle = "rgba(0,0,0,1)";
         ctx.fillRect(0, 0, width, height);
     });
 
-    var traceCount = mobile ? 20 : 50;
+    var traceCount = window.isDevice ? 20 : 50;
     var pointsOrigin = [];
     var i;
-    var dr = mobile ? 0.3 : 0.1;
-    for (i = 0; i < Math.PI * 2; i += dr) pointsOrigin.push(scaleAndTranslate(heartPosition(i), 210, 13, 0, 0));
-    for (i = 0; i < Math.PI * 2; i += dr) pointsOrigin.push(scaleAndTranslate(heartPosition(i), 150, 9, 0, 0));
-    for (i = 0; i < Math.PI * 2; i += dr) pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90, 5, 0, 0));
+    var dr = window.isDevice ? 0.3 : 0.1;
+
+    for (i = 0; i < Math.PI * 2; i += dr) {
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 210, 13, 0, 0));
+    }
+    for (i = 0; i < Math.PI * 2; i += dr) {
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 150, 9, 0, 0));
+    }
+    for (i = 0; i < Math.PI * 2; i += dr) {
+        pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90, 5, 0, 0));
+    }
+
     var heartPointsCount = pointsOrigin.length;
 
     var targetPoints = [];
@@ -80,7 +96,9 @@ var init = function () {
             f: "hsla(0," + ~~(40 * rand() + 60) + "%," + ~~(60 * rand() + 20) + "%,.3)",
             trace: []
         };
-        for (var k = 0; k < traceCount; k++) e[i].trace[k] = {x: x, y: y};
+        for (var k = 0; k < traceCount; k++) {
+            e[i].trace[k] = { x: x, y: y };
+        }
     }
 
     var config = {
@@ -91,8 +109,8 @@ var init = function () {
     var time = 0;
     var loop = function () {
         var n = -Math.cos(time);
-        pulse((1 + n) * .5, (1 + n) * .5);
-        time += ((Math.sin(time)) < 0 ? 9 : (n > 0.8) ? .2 : 1) * config.timeDelta;
+        pulse((1 + n) * 0.5, (1 + n) * 0.5);
+        time += ((Math.sin(time)) < 0 ? 9 : (n > 0.8) ? 0.2 : 1) * config.timeDelta;
         ctx.fillStyle = "rgba(0,0,0,.1)";
         ctx.fillRect(0, 0, width, height);
         for (i = e.length; i--;) {
@@ -104,8 +122,7 @@ var init = function () {
             if (10 > length) {
                 if (0.95 < rand()) {
                     u.q = ~~(rand() * heartPointsCount);
-                }
-                else {
+                } else {
                     if (0.99 < rand()) {
                         u.D *= -1;
                     }
@@ -133,9 +150,6 @@ var init = function () {
                 ctx.fillRect(u.trace[k].x, u.trace[k].y, 1, 1);
             }
         }
-        //ctx.fillStyle = "rgba(255,255,255,1)";
-        //for (i = u.trace.length; i--;) ctx.fillRect(targetPoints[i][0], targetPoints[i][1], 2, 2);
-
         window.requestAnimationFrame(loop, canvas);
     };
     loop();
